@@ -1,6 +1,9 @@
 package com.waltercojal.gitflowexample;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -8,19 +11,22 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.os.Bundle;
-import android.widget.TextView;
+import android.util.Log;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView result;
+    private RecyclerView result;
+    private PostAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        result = findViewById(R.id.mainResult);
+        result = findViewById(R.id.result);
+        result.setLayoutManager(new LinearLayoutManager(this));
+        result.setItemAnimator(new DefaultItemAnimator());
         callService();
     }
 
@@ -37,23 +43,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if (!response.isSuccessful()) {
-                    result.setText("Code: " + response.code());
+                    Log.e(getLocalClassName(), "Code: " + response.code());
                 } else {
-                    List<Post> posts = response.body();
-                    for (Post post : posts) {
-                        String content = "";
-                        content += "Id: " + post.getId() + "\n";
-                        content += "userId: " + post.getUserId() + "\n";
-                        content += "Title: " + post.getTitle() + "\n";
-                        content += "Body: " + post.getText() + "\n\n";
-                        result.append(content);
-                    }
+                    adapter = new PostAdapter(response.body());
+                    result.setAdapter(adapter);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                result.setText(t.getLocalizedMessage());
                 t.printStackTrace();
             }
         });
