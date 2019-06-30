@@ -27,8 +27,8 @@
                 android:layout_margin="20dp"
                 android:text="TextView"
                 android:textAlignment="center"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="24sp" />
+                android:textColor="?attr/colorError"
+                android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
 
