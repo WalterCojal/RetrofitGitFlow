@@ -1,4 +1,4 @@
-package com.waltercojal.gitflowexample;
+package com.waltercojal.gitflowexample.data.entities;
 
 import com.google.gson.annotations.SerializedName;
 
