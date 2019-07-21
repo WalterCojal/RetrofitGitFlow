@@ -4,11 +4,14 @@ import com.waltercojal.gitflowexample.data.entities.Post;
 import com.waltercojal.gitflowexample.domain.post_detail_interactor.IPostDetailInteractor;
 import com.waltercojal.gitflowexample.presentation.post_detail.IPostDetailPresenter;
 
+import javax.inject.Inject;
+
 public class PostDetailPresenter implements IPostDetailPresenter.IPresenter {
 
     IPostDetailPresenter.IView view;
-    IPostDetailInteractor postDetailInteractor;
+    private final IPostDetailInteractor postDetailInteractor;
 
+    @Inject
     public PostDetailPresenter(IPostDetailInteractor iPostDetailInteractor) {
         this.postDetailInteractor = iPostDetailInteractor;
     }

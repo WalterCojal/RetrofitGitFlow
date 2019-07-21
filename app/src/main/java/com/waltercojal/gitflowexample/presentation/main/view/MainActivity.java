@@ -4,23 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.waltercojal.gitflowexample.MyApplication;
 import com.waltercojal.gitflowexample.R;
 import com.waltercojal.gitflowexample.data.entities.Post;
-import com.waltercojal.gitflowexample.domain.main_interactor.MainInteractorImpl;
-import com.waltercojal.gitflowexample.network.JsonPlaceHolderApi;
 import com.waltercojal.gitflowexample.presentation.main.IMainContract;
 import com.waltercojal.gitflowexample.presentation.main.presenter.MainPresenter;
 import com.waltercojal.gitflowexample.presentation.post_detail.view.PostDetailActivity;
@@ -28,19 +21,26 @@ import com.waltercojal.gitflowexample.presentation.post_detail.view.PostDetailAc
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity implements IMainContract.IView {
 
     private RecyclerView result;
     private PostAdapter adapter;
     private ProgressBar progressBar;
     private List<Post> postList = new ArrayList<>();
-    private MainPresenter mainPresenter;
+    @Inject
+    MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainPresenter = new MainPresenter(new MainInteractorImpl());
+        // mainPresenter = new MainPresenter(new MainInteractorImpl());
+
+        MyApplication myApplication = (MyApplication) getApplication();
+        myApplication.getAppComponent().inject(this);
+
         mainPresenter.attachView(this);
         result = findViewById(R.id.result);
         progressBar = findViewById(R.id.main_progress);

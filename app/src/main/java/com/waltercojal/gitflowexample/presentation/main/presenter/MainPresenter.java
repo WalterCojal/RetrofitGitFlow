@@ -6,11 +6,14 @@ import com.waltercojal.gitflowexample.presentation.main.IMainContract;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class MainPresenter implements IMainContract.IPresenter {
 
     IMainContract.IView view;
-    IMainInteractor interactor;
+    private final IMainInteractor interactor;
 
+    @Inject
     public MainPresenter(IMainInteractor interactor) {
         this.interactor = interactor;
     }

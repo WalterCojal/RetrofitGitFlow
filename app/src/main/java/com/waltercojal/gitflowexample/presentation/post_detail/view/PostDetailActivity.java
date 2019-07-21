@@ -8,23 +8,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.waltercojal.gitflowexample.MyApplication;
 import com.waltercojal.gitflowexample.R;
 import com.waltercojal.gitflowexample.data.entities.Post;
-import com.waltercojal.gitflowexample.domain.post_detail_interactor.PostDetailInteractorImpl;
 import com.waltercojal.gitflowexample.presentation.post_detail.IPostDetailPresenter;
 import com.waltercojal.gitflowexample.presentation.post_detail.presenter.PostDetailPresenter;
+
+import javax.inject.Inject;
 
 public class PostDetailActivity extends AppCompatActivity implements IPostDetailPresenter.IView {
 
     private TextView main;
     private ProgressBar progressBar;
-    private PostDetailPresenter presenter;
+    @Inject
+    PostDetailPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detail);
-        presenter = new PostDetailPresenter(new PostDetailInteractorImpl());
+        MyApplication application = (MyApplication) getApplication();
+        application.getAppComponent().inject(this);
+        // presenter = new PostDetailPresenter(new PostDetailInteractorImpl());
         presenter.attachView(this);
         main = findViewById(R.id.postDetailText);
         progressBar = findViewById(R.id.postDetailProgress);
