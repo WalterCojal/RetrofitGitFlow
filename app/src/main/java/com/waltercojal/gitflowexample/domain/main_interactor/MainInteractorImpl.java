@@ -1,35 +1,36 @@
 package com.waltercojal.gitflowexample.domain.main_interactor;
 
 import com.waltercojal.gitflowexample.data.entities.Post;
-import com.waltercojal.gitflowexample.network.ApiClient;
 import com.waltercojal.gitflowexample.network.JsonPlaceHolderApi;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 
 public class MainInteractorImpl implements IMainInteractor {
 
-    @Override
-    public void getAllPost(MainCallBack callBack) {
-        JsonPlaceHolderApi placeHolderApi = ApiClient.client().create(JsonPlaceHolderApi.class);
-        Call<List<Post>> call = placeHolderApi.getPosts();
-        call.enqueue(new Callback<List<Post>>() {
-            @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                if (!response.isSuccessful()) {
-                    callBack.onError("Code: " + response.code());
-                } else {
-                    callBack.onSuccess(response.body());
-                }
-            }
+    private final JsonPlaceHolderApi jsonPlaceHolderApi;
+    private final Scheduler uiThread;
+    private final Scheduler executorScheduler;
 
-            @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
-                callBack.onError(t.getLocalizedMessage());
-            }
-        });
+    @Inject
+    public MainInteractorImpl(JsonPlaceHolderApi jsonPlaceHolderApi, Scheduler uiThread, Scheduler executorScheduler) {
+        this.jsonPlaceHolderApi = jsonPlaceHolderApi;
+        this.uiThread = uiThread;
+        this.executorScheduler = executorScheduler;
+    }
+
+    @Inject
+
+
+
+    @Override
+    public Observable<List<Post>> getAllPost() {
+        return jsonPlaceHolderApi.getPosts()
+                .observeOn(uiThread)
+                .subscribeOn(executorScheduler);
     }
 }

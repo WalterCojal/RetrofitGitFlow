@@ -21,7 +21,7 @@ public class PostDetailInteractorImpl implements IPostDetailInteractor {
         }
 
         JsonPlaceHolderApi placeHolderApi = ApiClient.client().create(JsonPlaceHolderApi.class);
-        Call<Post> call = placeHolderApi.getPostDetail(id);
+        /*Call<Post> call = placeHolderApi.getPostDetail(id);
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
@@ -36,7 +36,7 @@ public class PostDetailInteractorImpl implements IPostDetailInteractor {
             public void onFailure(Call<Post> call, Throwable t) {
                 detailCallBack.onError(t.getLocalizedMessage());
             }
-        });
+        });*/
     }
 
     @Override

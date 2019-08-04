@@ -27,8 +27,8 @@ public class PostDetailActivity extends AppCompatActivity implements IPostDetail
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detail);
-        MyApplication application = (MyApplication) getApplication();
-        application.getAppComponent().inject(this);
+        /*MyApplication application = (MyApplication) getApplication();
+        application.getAppComponent().inject(this);*/
         // presenter = new PostDetailPresenter(new PostDetailInteractorImpl());
         presenter.attachView(this);
         main = findViewById(R.id.postDetailText);

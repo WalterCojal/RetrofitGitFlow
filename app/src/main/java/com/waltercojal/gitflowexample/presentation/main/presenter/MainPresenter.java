@@ -8,10 +8,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
 public class MainPresenter implements IMainContract.IPresenter {
 
     IMainContract.IView view;
     private final IMainInteractor interactor;
+    private Disposable disposable;
 
     @Inject
     public MainPresenter(IMainInteractor interactor) {
@@ -26,6 +30,9 @@ public class MainPresenter implements IMainContract.IPresenter {
     @Override
     public void detachView() {
         view = null;
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     @Override
@@ -36,21 +43,31 @@ public class MainPresenter implements IMainContract.IPresenter {
     @Override
     public void getAllPost() {
         view.showProgressBar();
-        interactor.getAllPost(new IMainInteractor.MainCallBack() {
+        interactor.getAllPost().subscribe(new Observer<List<Post>>() {
             @Override
-            public void onSuccess(List<Post> list) {
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
+
+            @Override
+            public void onNext(List<Post> posts) {
                 if (isViewAttached()) {
-                    view.getAllPostSuccess(list);
+                    view.getAllPostSuccess(posts);
                     view.hideProgressBar();
                 }
             }
 
             @Override
-            public void onError(String errorMsg) {
+            public void onError(Throwable e) {
                 if (isViewAttached()) {
-                    view.showError(errorMsg);
+                    view.showError(e.getMessage());
                     view.hideProgressBar();
                 }
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
     }
